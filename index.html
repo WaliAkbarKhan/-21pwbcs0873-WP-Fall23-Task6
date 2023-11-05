@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Library Management System</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="style.css">
+<style>
+ 
+  .library-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  .header {
+    background-color: #e83e8c;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+    margin-bottom: 15px;
+  }
+  #search-results {
+    display: none; /* hide initially */
+  }
+</style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="header">
+    <h2>Online Library Management System (OLMS)</h2>
+  </div>
+  <div class="library-container">
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Book List</h4>
+        <ul id="book-list">
+          <li>Hacking: The Art of Exploitation by Jon Erickson ISBN: 978-1593271442</li>
+          <li>Introduction to the Theory of Computing by Michael Sipser ISBN: 978-1133187790</li>
+          <li>Eloquent JavaScript: A Modern Introduction to Programming by Marijn Haverbeke ISBN: 978-1593279509</li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h4>Add New Book</h4>
+        <form id="add-book-form">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Title" id="book-title">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Author" id="book-author">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="ISBN" id="book-isbn">
+          </div>
+          <button type="submit" class="btn btn-primary">Add Book</button>
+        </form>
+      </div>
+      
+      <div class="col-md-3">
+        <h4>Search a Book</h4>
+        <form id="search-book-form">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Book Name" id="search-book">
+          </div>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+      </div>
+      <div id="search-results" class="col-md-9"> 
+        <h4>Search Results</h4>
+        <ul id="results-list">
+         
+        </ul>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+    // Function to add a book to the list
+    function addBookToList(title, author, isbn) {
+      const list = document.getElementById('book-list');
+      const row = document.createElement('li');
+      row.textContent = `${title} by ${author} ISBN: ${isbn}`;
+      list.appendChild(row);
+    }
+  
+    // Add book form submission
+    document.getElementById('add-book-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+  
+      const title = document.getElementById('book-title').value.trim();
+      const author = document.getElementById('book-author').value.trim();
+      const isbn = document.getElementById('book-isbn').value.trim();
+  
+      // Simple validation
+      if(title === '' || author === '' || isbn === '') {
+        alert('Please fill in all fields');
+      } else {
+        addBookToList(title, author, isbn);
+        // Clear the form
+        document.getElementById('book-title').value = '';
+        document.getElementById('book-author').value = '';
+        document.getElementById('book-isbn').value = '';
+      }
+    });
+  
+    function searchBook(query) {
+      const list = document.getElementById('book-list');
+      const resultContainer = document.getElementById('search-results');
+      const resultsList = document.getElementById('results-list');
+      resultContainer.style.display = 'block'; // Show the search results container
+      resultsList.innerHTML = ''; // Clear previous results
+
+      let found = false;
+      const books = list.getElementsByTagName('li');
+      for (let i = 0; i < books.length; i++) {
+        const title = books[i].textContent.toLowerCase();
+        if (title.indexOf(query.toLowerCase()) !== -1) {
+          found = true;
+          const resultItem = books[i].cloneNode(true);
+          resultsList.appendChild(resultItem);
+        }
+      }
+      if (!found) {
+      const noResultItem = document.createElement('li');
+      noResultItem.textContent = 'No books found.';
+      resultsList.appendChild(noResultItem);
+    }
+      /*if(resultsList.innerHTML === '') {
+        resultContainer.style.display = 'none'; // Hide the results container if no results
+      }*/
+    }
+
+  
+    // Search book form submission
+    document.getElementById('search-book-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = document.getElementById('search-book').value.trim();
+      searchBook(query);
+    });
+  </script>
+  
+
+</body>
+</html>
